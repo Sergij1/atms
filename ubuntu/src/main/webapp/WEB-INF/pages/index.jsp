@@ -9,6 +9,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <c:redirect url = "http://192.168.0.95:8080/ubuntu/atms"/>
+    <c:redirect url = "http://192.168.0.95:8080/banksATMS/atms"/>
 </body>
 </html>

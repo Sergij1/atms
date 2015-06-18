@@ -17,9 +17,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.file.remote.session.Session;
 import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
-import org.springframework.integration.ftp.session.FtpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.mkyong.common.form.Coordinates_Ua;
 import com.mkyong.common.form.Seti;
 import com.mkyong.common.service.CoordinatesService;
@@ -58,24 +55,16 @@ public class MovieController {
 	 */
 	@Autowired
 	private CoordinatesService coordinate;
-	@Autowired
-	@Qualifier("ftpConnection")
-	FtpConnection ftpConnection ;
-	@Autowired
-	@Qualifier("ftpClientFactory")
-    private  DefaultFtpSessionFactory dfFtpSession;
+
 	 /**
      * Size of a byte buffer to read/write file
      */
     private static final int BUFFER_SIZE = 4096;
 
 	// http://192.168.0.95:8080/ubuntu/atms
-	@RequestMapping(value="/{atms}", method = RequestMethod.GET)
-	public String getMovie(@PathVariable String atms, ModelMap model) {
-
-		model.addAttribute("movie", atms);
-		
-		return "list";
+    @RequestMapping(value="/atms", method=RequestMethod.GET)
+	public String getMovie() {
+		  return "map";
 
 
 
