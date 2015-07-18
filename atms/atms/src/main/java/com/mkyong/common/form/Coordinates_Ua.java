@@ -12,7 +12,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-
+/**
+ *  coordinate latitude , longitude on map
+ * @author Sergey
+ *
+ */
 
 	@Entity
 	@Table(name = "coordinates_ua")

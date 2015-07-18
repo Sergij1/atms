@@ -23,9 +23,9 @@ public class SetiDAOImpl implements SetiDAO {
 		List<Seti> result;
 		try {
 			result = sessionFactory.getCurrentSession().createCriteria(Seti.class).list();
-			try {
+		/*	try {
 				switch (lazyLoadLevel) {
-					case 3: 
+				case INIT_BANK_ATMSIFO_COORDINAT: 
 						for (int i = 0; i < result.size(); i++) {
 							for (int j = 0; j < result.get(i).getBanks().size(); j++) {
 								for (int k = 0; k < result.get(i).getBanks().get(j).getAtms_info_ua().size(); k++) {
@@ -34,14 +34,14 @@ public class SetiDAOImpl implements SetiDAO {
 							}
 						}
 						break;
-					case 2: 
+					case INIT_BANK_ATMSIFO: 
 						for (int i = 0; i < result.size(); i++) {
 							for(int j = 0; j < result.get(i).getBanks().size(); j++) {
 								Hibernate.initialize((  result.get(i).getBanks()).get(j).getAtms_info_ua());
 							}
 						}
 						break;
-					case 1:
+					case INIT_BANK:
 						for (int i = 0; i < result.size(); i++) {
 							Hibernate.initialize(result.get(i).getBanks());
 						}
@@ -49,7 +49,7 @@ public class SetiDAOImpl implements SetiDAO {
 				}
 			} catch (Exception ex) {
 				
-			}	
+			}*/	
 		} catch (Exception ex) {
 			result = new ArrayList<Seti>(0);
 		}
@@ -60,27 +60,27 @@ public class SetiDAOImpl implements SetiDAO {
 		Seti result;
 		try {
 			result = (Seti)sessionFactory.getCurrentSession().get(Seti.class, id);
-			try {
+			/*try {
 				switch (lazyLoadLevel) {
-					case 3: 				
+					case INIT_BANK_ATMSIFO_COORDINAT: 				
 						for (int j = 0; j < result.getBanks().size(); j++) {
 							for (int k = 0; k < result.getBanks().get(j).getAtms_info_ua().size(); k++) {
 								Hibernate.initialize(result.getBanks().get(j).getAtms_info_ua().get(k).getCoordinates_ua());
 							}
 						}
 						break;
-					case 2: 						
+					case INIT_BANK_ATMSIFO: 						
 						for(int j = 0; j < result.getBanks().size(); j++) {
 							Hibernate.initialize(result.getBanks().get(j).getAtms_info_ua());
 						}		
 						break;
-					case 1:
+					case INIT_BANK:
 						Hibernate.initialize(result.getBanks());
 						break;			
 				}
 			} catch (Exception ex) { 
 				
-			}
+			}*/
 		} catch (Exception ex) {
 			result = null;
 		}
@@ -103,9 +103,9 @@ public class SetiDAOImpl implements SetiDAO {
 					result = new ArrayList<Seti>(0);
 					break;
 			}	
-			try {
+			/*try {
 				switch (lazyLoadLevel) {
-					case 3: 
+					case INIT_BANK_ATMSIFO_COORDINAT: 
 						for (int i = 0; i < result.size(); i++) {
 							for (int j = 0; j < result.get(i).getBanks().size(); j++) {
 								for (int k = 0; k < result.get(i).getBanks().get(j).getAtms_info_ua().size(); k++) {
@@ -114,14 +114,14 @@ public class SetiDAOImpl implements SetiDAO {
 							}
 						}
 						break;
-					case 2: 
+					case INIT_BANK_ATMSIFO: 
 						for (int i = 0; i < result.size(); i++) {
 							for(int j = 0; j < result.get(i).getBanks().size(); j++) {
 								Hibernate.initialize(result.get(i).getBanks().get(j).getAtms_info_ua());
 							}
 						}
 						break;
-					case 1:
+					case INIT_BANK:
 						for (int i = 0; i < result.size(); i++) {
 							Hibernate.initialize(result.get(i).getBanks());
 						}
@@ -129,7 +129,7 @@ public class SetiDAOImpl implements SetiDAO {
 				}
 			} catch (Exception ex) {
 				
-			}	
+			}*/
 		} catch (Exception ex) {
 			result = new ArrayList<Seti>(0);
 		}

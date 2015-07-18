@@ -27,11 +27,13 @@ import ftp.connection.file.image.bank.FtpConnection;
 /**
  * Servlet implementation class FileLoad
  */
-// http://192.168.0.95:8080/banksATM/FileLoad?type=folder&name=?????????
+// http://192.168.0.95:8080/atms/FileLoad?type=folder&name=?????????
+//http://127.0.0.1:8080/atms/FileLoad?type=folder&name=?????????
+//http://127.0.0.1:8080/atms/FileLoad?type=folder&name=image2
 @WebServlet("/FileLoad")
 public class FileLoad extends HttpServlet {
 	private static final Logger logger = Logger
-			.getLogger(CommandOutFileZip.class);
+			.getLogger(FileLoad .class);
 
 	private static final long serialVersionUID = 1L;
 
@@ -47,8 +49,18 @@ public class FileLoad extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
-	protected void doPost(HttpServletRequest request,
+	@Override
+protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		logger.info("GEt");
+		    ICommandOUtZip actionCommand = getActionCommand(request, response);
+		    String nameFolder = request.getParameter("name");
+		    actionCommand.execute(nameFolder, response);
+	}
+	@Override
+protected void doPost(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		logger.info("Post");
 		ICommandOUtZip actionCommand = getActionCommand(request, response);
 		String nameFolder = request.getParameter("name");
 		actionCommand.execute(nameFolder, response);

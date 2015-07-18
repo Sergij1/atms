@@ -24,7 +24,7 @@ public class CommandOutFileZip implements ICommandOUtZip {
 	
 	@Override
 	public void execute( String nameFolder, HttpServletResponse response) {
-		       
+		logger.info("dir CommandOutFileZip");
 				   try {
 						ftpConnection.getFildZipImage(nameFolder, response);
 					} catch (IOException e) {

@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.net.ftp.FTPFile;
@@ -19,6 +17,7 @@ import org.springframework.integration.file.remote.session.Session;
 import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
 import org.springframework.integration.ftp.session.FtpSession;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Component("ftpConnection")
 public class FtpConnection {
@@ -37,13 +36,16 @@ public class FtpConnection {
 	 * @return InputStream byte output one image file
 	 */
 	public void outRequestFolder(String folder, HttpServletResponse response) {
+		logger.info("start outRequestFolder");
 		FTPFile[] ftpFil = null;
 		PrintWriter printwrite = null;
 		ServletOutputStream outStream = null;
 		Session<FTPFile> sess = (FtpSession) dfFtpSession.getSession();
 		InputStream inputFtpFile = null;
 		try {
-          ftpFil = sess.list("/home/sergey/");
+        //  ftpFil = sess.list("/home/sergey/");//ubuntu
+			ftpFil = sess.list("/");
+			logger.info("dir"+ftpFil.length);
 			for (FTPFile f : ftpFil) {
 				if (f.getName().equals(folder)) {
 					String name = f.getName();

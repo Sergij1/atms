@@ -33,7 +33,7 @@ http://www.springframework.org/schema/integration/stream/spring-integration-ftp-
 	 
 	 <bean id="ftpClientFactory"
            class="org.springframework.integration.ftp.session.DefaultFtpSessionFactory">
-                <property name="host" value="localhost"/>
+                <property name="host" value="127.0.0.1"/>
                 <property name="port" value="21"/>
                 <property name="username" value="sergey"/>
                 <property name="password" value="Sergey221912"/>

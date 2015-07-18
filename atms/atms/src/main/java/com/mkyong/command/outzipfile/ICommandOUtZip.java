@@ -1,11 +1,14 @@
 package com.mkyong.command.outzipfile;
 
 import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.stereotype.Service;
 /**
  * downloads file  client
  * @author Sergey
  *
  */
+@Service
 public interface ICommandOUtZip {
 	/**
 	 *  download  zip file or folder  client
