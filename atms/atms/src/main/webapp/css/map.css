@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+
+#h1header {
+	border: 5px solid #400040;
+	margin-top: 100px;
+	margin-bottom: 100px;
+	text-align: left;
+	color: blue;
+	bacground-color:#00ff00;
+}
+
+#header {
+	height: 10%;
+	width: 100%;
+}
+
+#footer {
+	height: 3%;
+	width: 100%;
+	bacground-color:#00ff00;
+}
+
+#form_left {
+	height: 100%;
+	width: 10%;
+	float: right;
+	margin-left: 15px;
+	text-align: center;
+	bacground-color:#80ffff;
+}
+
+#map-canvas {
+	float: left;
+	height: 83%;
+	width: 90%;
+}
