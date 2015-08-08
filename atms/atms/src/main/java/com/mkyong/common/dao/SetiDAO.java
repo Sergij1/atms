@@ -1,6 +1,7 @@
 package com.mkyong.common.dao;
 
 import java.util.List;
+import java.util.Locale;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +24,14 @@ public interface SetiDAO{
 	 * @param lazyLoadLevel 
 	 * @return list Seti  
 	 */
-	public List<Seti> listSeti(int lazyLoadLevel);  
+	public List<Seti> listSeti();  
 	/**
 	 * return entity Seti by id 
 	 * @param id id seti 
 	 * @param lazyLoadLevel
 	 * @return Seti by id 
 	 */
-    public Seti getSeti(Integer id, int lazyLoadLevel);
+    public Seti getSeti(Integer id);
      /**
       * 
       * @param field
@@ -38,6 +39,11 @@ public interface SetiDAO{
       * @param lazyLoadLevel
       * @return
       */
-    public List<Seti> getSetiByCriteria(String field, String value, int lazyLoadLevel);
+    public List<Seti> getSetiByCriteria(String field, String value);
+      /**
+       * 
+       * @return list country
+       */
+    public List<String> getCountry(Locale locale);
 	
 }

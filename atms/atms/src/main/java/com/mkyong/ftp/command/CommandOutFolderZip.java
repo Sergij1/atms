@@ -1,31 +1,35 @@
-package com.mkyong.command.outzipfile;
+package com.mkyong.ftp.command;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import ftp.connection.file.image.bank.FtpConnection;
+import org.springframework.stereotype.Component;
+
+import com.mkyong.ftp.connection.FtpConnection;
+
+
+
 /**
  * 
  * @author Sergey
  * class unloads  zip folder   
  */
+@Component("CommandOutFolderZip")
 public class CommandOutFolderZip implements ICommandOUtZip {
 	private static final Logger logger = Logger.getLogger(CommandOutFolderZip.class);
-	@Autowired
-	FtpConnection ftpConnection;
 
+	@Autowired
+	@Qualifier("ftpConnection")
+    FtpConnection ftpConnection;
+    /**
+     * empty constructor
+     */
 	public CommandOutFolderZip(){
 		super();
+	
 	}
-	public FtpConnection getFtpConnection() {
-		return ftpConnection;
-	}
-	@Autowired
-	public void setFtpConnection(FtpConnection ftpConnection) {
-		this.ftpConnection = ftpConnection;
-	}
+	  
 	@Override
 	public void execute( String nameFolder, HttpServletResponse response) {
      nameFolder +=".zip";
@@ -36,9 +40,12 @@ public class CommandOutFolderZip implements ICommandOUtZip {
      else{
     	 ftpConnection.outRequestFolder( nameFolder, response );
      }
-			 
-			   
-		
 	}
+	@Override
+    public String toString(){
+		
+ 	   return "CommandOutFZip";
+ 	   
+    }
 
 }

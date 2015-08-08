@@ -1,23 +1,19 @@
-package ftp.connection.file.image.bank;
+package com.mkyong.ftp.connection;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.file.remote.session.CachingSessionFactory;
 import org.springframework.integration.file.remote.session.Session;
 import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
 import org.springframework.integration.ftp.session.FtpSession;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component("ftpConnection")
 public class FtpConnection {
@@ -31,7 +27,7 @@ public class FtpConnection {
 
 	/*
 	 * 
-	 * @param String Folder name
+	 * @param folder String Folder name
 	 * 
 	 * @return InputStream byte output one image file
 	 */
@@ -43,15 +39,15 @@ public class FtpConnection {
 		Session<FTPFile> sess = (FtpSession) dfFtpSession.getSession();
 		InputStream inputFtpFile = null;
 		try {
-        //  ftpFil = sess.list("/home/sergey/");//ubuntu
+			// ftpFil = sess.list("/home/sergey/");//ubuntu
 			ftpFil = sess.list("/");
-			logger.info("dir"+ftpFil.length);
+			logger.info("dir" + ftpFil.length);
 			for (FTPFile f : ftpFil) {
 				if (f.getName().equals(folder)) {
 					String name = f.getName();
 					String mimeType = "application/zip";
 					response.setContentType(mimeType);
-					int size = (int)f.getSize();
+					int size = (int) f.getSize();
 					response.setContentLength(size);
 					String headerKey = "Content-Disposition";
 					String headerValue = String.format(
@@ -87,8 +83,8 @@ public class FtpConnection {
 	 */
 	public InputStream outRequestFile(String fileName) throws IOException {
 		InputStream ftpFile = null;
-    	Session<FTPFile> sess = (FtpSession) dfFtpSession.getSession();
-        if (sess != null) {
+		Session<FTPFile> sess = (FtpSession) dfFtpSession.getSession();
+		if (sess != null) {
 			ftpFile = sess.readRaw(fileName);
 		}
 
@@ -123,9 +119,10 @@ public class FtpConnection {
 		return size;
 
 	}
-	
 
-	/**return in threat zip file image
+	/**
+	 * return in threat zip file image
+	 * 
 	 * @param name
 	 * @param response
 	 * @throws IOException
@@ -135,25 +132,25 @@ public class FtpConnection {
 		String names = null;
 		InputStream inputFile = null;
 		File fie = null;
-		names = name+".zip";
-		
-		 inputFile =(InputStream)outRequestFile(names);
-         String mimeType = "application/zip";
-         response.setContentType(mimeType);
-         long size = outSizeFile(name);
-         response.setContentLength((int)size);  
-	     String headerKey = "Content-Disposition";
-	     String headerValue = String.format("attachment; filename=\"%s\"",names );
-	     response.setHeader(headerKey, headerValue);
-	     ServletOutputStream outStream = response.getOutputStream();
-	     byte[] buffer = new byte[BUFFER_SIZE];
-         int bytesRead = -1;
-         while ((bytesRead = inputFile.read(buffer)) != -1) {
-             outStream.write(buffer, 0, bytesRead);
-         }
- 
-         inputFile.close();
-         outStream.close();
+		names = name + ".zip";
+		inputFile = (InputStream) outRequestFile(names);
+		String mimeType = "application/zip";
+		response.setContentType(mimeType);
+		long size = outSizeFile(name);
+		response.setContentLength((int) size);
+		String headerKey = "Content-Disposition";
+		String headerValue = String
+				.format("attachment; filename=\"%s\"", names);
+		response.setHeader(headerKey, headerValue);
+		ServletOutputStream outStream = response.getOutputStream();
+		byte[] buffer = new byte[BUFFER_SIZE];
+		int bytesRead = -1;
+		while ((bytesRead = inputFile.read(buffer)) != -1) {
+			outStream.write(buffer, 0, bytesRead);
+		}
+
+		inputFile.close();
+		outStream.close();
 	}
 
 }

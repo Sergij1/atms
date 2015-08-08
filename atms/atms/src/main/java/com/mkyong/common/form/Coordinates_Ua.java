@@ -118,5 +118,12 @@ import javax.persistence.Table;
 			public void setBank_coord(Banks_Ua bank_coord) {
 				this.bank_coord = bank_coord;
 			}
+			@Override
+			public String toString() {
+			// TODO Auto-generated method stub
+			 super.toString();
+			 return new String ("id \t"+id+ "X_LATITUDE\t"+x_latitude+"");
+			
+			}
 }
 

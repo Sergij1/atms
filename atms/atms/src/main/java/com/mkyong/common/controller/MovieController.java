@@ -1,24 +1,12 @@
 package com.mkyong.common.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Locale;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.log4j.Logger;
-import org.hibernate.SessionFactory;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.integration.ftp.session.DefaultFtpSessionFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,147 +14,109 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.mkyong.comman.data.GetoutData;
+import com.mkyong.ftp.command.CommandOutFolderZip;
+import com.mkyong.json.parse.ParseJson;
 
-import com.mkyong.common.form.Coordinates_Ua;
-import com.mkyong.common.form.Seti;
-import com.mkyong.common.service.CoordinatesService;
-import com.mkyong.common.service.SetiService;
-
-import ftp.connection.file.image.bank.FtpConnection;
 
 
 /*
  * controller return coordinates  ATMS  client In JSON
  */
 
-
 @Controller
-@RequestMapping(produces="application/json;charset=UTF-8")  
-
+@RequestMapping(produces = "application/json;charset=UTF-8")
 public class MovieController {
-	private static final Logger logger = Logger.getLogger(MovieController.class);
+	private static final Logger logger = Logger
+			.getLogger(MovieController.class);
+	private static final String COUNTRY_UA = "Ukrain";
 	/**
-	 * Injection SetiService object
-	 * @see SetiService
+	 * loader  zip folder 
+	 * @see CommandOutFolderZip
 	 */
 	@Autowired
-	SetiService setiService;
+	@Qualifier("CommandOutFolderZip")
+    CommandOutFolderZip commandOutFolderZip;
 	/**
-	 * Injection CoordinatesService object
-	 * @see CoordinatesService
+	 * parse date in json
 	 */
 	@Autowired
-	private CoordinatesService coordinate;
+	@Qualifier("ParseJson")
+	ParseJson parseJson;
+	/**
+	 * @see GetoutData
+	 */
 	@Autowired
-	@Qualifier("ftpConnection")
-	FtpConnection ftpConnection;
+	GetoutData getutData;
+
+	// http://192.168.0.95:8080/atms/atm
+	// http://127.0.0.1:8080/atms/atm
+	@RequestMapping(value = "/*", method = RequestMethod.GET)
+	public String getMovie(Locale local,ModelMap model) {
+		ArrayList<String> country =  getutData.getCountry(local);
+	    model.addAttribute("country", country);
+		logger.info(local.getLanguage());
+		return "index";
+		}
 	
-	 /**
-     * Size of a byte buffer to read/write file
-     */
-    private static final int BUFFER_SIZE = 4096;
+	@RequestMapping(value = "/area/{country}",  method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public @ResponseBody String getAllAreaCountry(Locale local,@PathVariable("country") String country) {
+		String  area = null;
+		if(country.equals(COUNTRY_UA)){
+			area = parseJson.getAllListAreaInCountry(local);	
+		}
+		return area;
+		}
 
-	// http://192.168.0.95:8080/banksATM/atms
-    @RequestMapping(value="/atms", method=RequestMethod.GET)
-	public String getMovie() {
-		  return "map";
-
-
-
-	}
-	
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/seti/{criteria}", method=RequestMethod.GET)
-	public @ResponseBody String getSetiByCriteria(@PathVariable("criteria") String value, 
-			@RequestParam(value="field", required=false, defaultValue="id") String field) throws IOException {
-				
-		List<Seti> seti = setiService.getSetiByCriteria(field, value, 0);
-			
-		JSONArray arr = new JSONArray();
-		JSONObject res = new JSONObject();
-		
-		if (seti != null) {
-			for (int i = 0; i < seti.size(); i++) {
-				JSONObject obj = new JSONObject();
-				obj.put("id", seti.get(i).getId());
-				obj.put("seti",  seti.get(i).getName_seti_ru());
-				obj.put("country",  seti.get(i).getCountry());
-				
-				arr.add(obj);				
-			}
-			
-			res.put("size", seti.size());
-		}			
-		
-		res.put("array", arr);
-		res.put("field", field);
-		res.put("value", value);		
-		
-		return res.toString();		
-	}	
+	@RequestMapping(value = "/seti/{criteria}", method = RequestMethod.GET, produces = "application/json;charset=UTF-8")
+	public @ResponseBody String getSetiByCriteria(Locale locale,
+			@PathVariable("criteria") String value,
+			@RequestParam(value = "field", required = false, defaultValue = "id") String field){
+		    return parseJson.getSetiByCriteria(field, value,locale);
+		}
+
 	// http://127.0.0.1:8080/atms/allcoordinates
+	/**
+	 * 
+	 * @return all  data  atm  and  description 
+	 * about atm(seti,bank,info atm, coordinates) in format json 
+	 *
+	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/allcoordinates", method=RequestMethod.GET)
-	public @ResponseBody String getCoordinatesiByNull()throws IOException {
-		List<Coordinates_Ua> coordin = coordinate.listCoordinates();	
-		JSONArray arr = new JSONArray();
-		JSONObject res = new JSONObject();
-		if (coordin != null) {
-			for (int i = 0; i < coordin.size(); i++) {
-				JSONObject obj = new JSONObject();
-				obj.put("id", coordin.get(i).getId());
-				obj.put("getX",  coordin.get(i).getX_latitude());
-				obj.put("gety",  coordin.get(i).getY_longitude());
-				arr.add(obj);				
-			}
-			
-			res.put("size", coordin.size());
-		}			
-		res.put("array", arr);
-		return res.toString();		
-	}	
-	//http://192.168.0.95:8080/ubuntu/coordinates?x=49.134126000000002000&y=33.441833000000003000&r=1
-	// http://82.144.203.67:8080/ubuntu/coordinates?x=49.134126000000002000&y=33.441833000000003000&r=1
+	@RequestMapping(value = "/allcoordinates", method = RequestMethod.GET)
+	public @ResponseBody String getCoordinatALL()  {
+		return  parseJson.getCoordinatesALL();
+	}
+
+	// http://192.168.0.95:8080/ubuntu/coordinates?x=49.134126000000002000&y=33.441833000000003000&r=1
 	// http://127.0.0.1:8080/atms/coordinates?x=49.134126000000002000&y=33.441833000000003000&r=1
 	/**
-	 * return list atms circumference in radius kilometers in the center point x_latitude and y_longitude
-	 * @param x_latitude x coordinate latitude
-	 * @param y_longitude y coordinate  longitude
-	 * @param radius radius circumference in kilometers
-	 * @return
+	 * method  return data atms by criteria coordinates (latitude, longitude, radius)
+	 * @param x_latitude latitude
+	 * @param y_longitude longitude
+	 * @param radius all atms in radius
+	 * @return string json
+	 */
+	@RequestMapping(value = "/coordinates", method = RequestMethod.GET)
+	public @ResponseBody String getCoordinatesiByCriteria(
+			@RequestParam(value = "x", required = false) String x_latitude,
+			@RequestParam(value = "y", required = false) String y_longitude,
+			@RequestParam(value = "r", required = false) String radius,Locale locale) {
+		 return parseJson.getCoordinatesiByCriteria(x_latitude, y_longitude, radius,locale);
+	}
+
+	// http://127.0.0.1:8080/atms/image?type=folder&name=image2
+	/**
+	 * loader  zip folder 
+	 * @param name name folder
+	 * @param response
 	 * @throws IOException
 	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/coordinates", method=RequestMethod.GET)
-	public @ResponseBody String getCoordinatesiByCriteria(@RequestParam(value="x", required=false) String x_latitude, @RequestParam(value="y", required=false) String y_longitude, @RequestParam(value="r", required=false) String radius) throws IOException {
-			logger.warn("Mapping");
-					 
-			Double x = Double.parseDouble(x_latitude);
-			Double y = Double.parseDouble(y_longitude);
-			Double r = Double.parseDouble(radius);
-		List<Coordinates_Ua> coordin = coordinate.getSetiByCriteria(x,y,r);
-	  JSONArray arr = new JSONArray();
-		JSONObject res = new JSONObject();
-		
-		if (coordin != null) {
-			for (int i = 0; i < coordin.size(); i++) {
-				JSONObject obj = new JSONObject();
-				
-				obj.put("id",coordin.get(i).getId());
-				obj.put("getX",coordin.get(i).getX_latitude());
-				obj.put("gety",coordin.get(i).getY_longitude());
-				obj.put("sity",coordin.get(i).getAtms_info_ua().getCity());
-				obj.put("street",coordin.get(i).getAtms_info_ua().getAddress());
-				arr.add(obj);				
-			}
-			res.put("size", coordin.size());
-		}			
-		res.put("array", arr);
-		res.put("main"," 4");
-		return res.toString();		
-	}	
-	
-	
-	
-	
-	}
+	@RequestMapping(value = "/image", method = RequestMethod.GET)
+	public @ResponseBody void getImage(@RequestParam(value = "name", required = false) String name,
+			 HttpServletResponse response){
+		    commandOutFolderZip.execute(name, response);
+	      }
+
+}

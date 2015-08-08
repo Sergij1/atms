@@ -1,8 +1,10 @@
-package com.mkyong.command.outzipfile;
+package com.mkyong.ftp.command;
+
 
 import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.stereotype.Service;
+
+
 /**
  * downloads file  client
  * @author Sergey
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface ICommandOUtZip {
+	
+	
 	/**
 	 *  download  zip file or folder  client
 	 *

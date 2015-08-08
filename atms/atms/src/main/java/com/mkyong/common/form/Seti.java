@@ -37,8 +37,12 @@ import javax.persistence.Table;
 		    @Column(name = "NAME_SETI_UA")
 		    private String name_seti_ua;
 
-		    @Column(name = "COUNTRY")
-		    private String country;
+		    @Column(name = "COUNTRY_RU")
+		    private String country_ru;
+		   
+		   
+			@Column(name = "COUNTRY_EN")
+		    private String country_en;
 		   
 		    @Column(name = "IMG_SETI")
 		    @javax.persistence.Lob
@@ -106,15 +110,16 @@ import javax.persistence.Table;
 			/**
 			 * @return the country
 			 */
-			public String getCountry() {
-				return country;
+			public String getCountry_EN() {
+				return country_en;
 			}
 
 			/**
-			 * @param country the country to set
+			 * @param country the country  language English
+			 * 
 			 */
-			public void setCountry(String country) {
-				this.country = country;
+			public void setCountryEn(String country_en) {
+				this.country_en = country_en;
 			}
 
 			/**
@@ -144,6 +149,21 @@ import javax.persistence.Table;
 			public void setBanks(List<Banks_Ua> banks) {
 				this.banks = banks;
 			}
+			/**
+			 * 
+			 * @return country language Russian
+			 */
+			public String getCountry_ru() {
+					return country_ru;
+				}
+			/**
+			 * 
+			 * set new  country language Russian
+			 */
+		  public void setCountry_ru(String country_ru) {
+					this.country_ru = country_ru;
+				}
+
 		}
 	
 	
